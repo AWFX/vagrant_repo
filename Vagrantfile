@@ -6,8 +6,7 @@ Vagrant.configure(2) do |config|
     (1..N).each do |i|
       config.vm.define "host#{i}" do |node|
         node.vm.box = "almalinux/9"
-        node.vm.synced_folder ".", "/vagrant"
-        #node.vm.synced_folder ".", "/vagrant", disabled: true
+        node.vm.synced_folder "./data", "/vagrant"
         node.vm.hostname = "host#{i}"
         node.vm.network "private_network", ip:"10.0.26.1#{i}"
         node.vm.provider "virtualbox" do |vb|
