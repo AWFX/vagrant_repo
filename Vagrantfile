@@ -1,19 +1,24 @@
 ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
 
-Vagrant.configure(2) do |config|
+Vagrant.configure("2") do |config|
 
-    N = 2
-    (1..N).each do |i|
-      config.vm.define "host#{i}" do |node|
-        node.vm.box = "debian/bullseye64"
-        node.vm.synced_folder "./data", "/vagrant"
-        node.vm.hostname = "host#{i}"
-        node.vm.network "private_network", ip:"10.0.26.1#{i}"
-        node.vm.provider "virtualbox" do |vb|
-          vb.memory = "2048"
-          vb.name = "host#{i}"
-          vb.cpus = 2
-        end
+  ADDR = ["10.0.26.11", "10.0.26.12"]
+  NAMEING = ["suricata", "nmap"]
+
+  N = 2
+  (1..N).each do |i|
+    config.vm.define "host#{i}" do |node|
+      node.vm.box = "debian/bullseye64"
+      node.vm.synced_folder "./data", "/vagrant"
+      node.vm.hostname = NAMEING[i - 1]
+      node.vm.network "private_network", ip: ADDR[i - 1]
+      node.vm.provider "virtualbox" do |vb|
+        vb.memory = "3072"
+        vb.name = NAMEING[i - 1]
+        vb.cpus = 3
       end
     end
+  end
+
 end
+
