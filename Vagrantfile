@@ -16,8 +16,23 @@ Vagrant.configure(2) do |config|
         vb.memory = "3072"
         vb.name = NAMEING[i - 1]
         vb.cpus = 3
+  N = 2
+  (1..N).each do |i|
+    config.vm.define "host#{i}" do |node|
+      node.vm.box = "debian/bullseye64"
+      node.vm.synced_folder "./data", "/vagrant"
+      node.vm.hostname = NAMEING[i - 1]
+      node.vm.network "private_network", ip: ADDR[i - 1]
+      node.vm.provider "virtualbox" do |vb|
+        vb.memory = "3072"
+        vb.name = NAMEING[i - 1]
+        vb.cpus = 3
       end
     end
+  end
+
+end
+
   end
 
 end
