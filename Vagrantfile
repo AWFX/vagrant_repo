@@ -2,38 +2,31 @@ ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
 
 Vagrant.configure(2) do |config|
 
-  NAMEING = ['suricata', 'nmap']
-  ADDR = ['10.0.26.11/24', '10.0.26.12/24']
-
-  N = 2
-  (1..N).each do |i|
-    config.vm.define "host#{i}" do |node|
-      node.vm.box = "debian/bullseye64"
-      node.vm.synced_folder "./data", "/vagrant"
-      node.vm.hostname = NAMEING[i - 1]
-      node.vm.network "private_network", ip: ADDR[i - 1]
-      node.vm.provider "virtualbox" do |vb|
-        vb.memory = "3072"
-        vb.name = NAMEING[i - 1]
-        vb.cpus = 3
-  N = 2
-  (1..N).each do |i|
-    config.vm.define "host#{i}" do |node|
-      node.vm.box = "debian/bullseye64"
-      node.vm.synced_folder "./data", "/vagrant"
-      node.vm.hostname = NAMEING[i - 1]
-      node.vm.network "private_network", ip: ADDR[i - 1]
-      node.vm.provider "virtualbox" do |vb|
-        vb.memory = "3072"
-        vb.name = NAMEING[i - 1]
-        vb.cpus = 3
-      end
+  #first machine
+  config.vm.define "web" do |web|
+    web.vm.box = "debian/bullseye64"
+    #web.vm.synced_folder "./data", "/ho"
+    web.vm.hostname = "web"
+    web.vm.provision "shell",
+      inline: 'echo "ITS ARTYOM" >> /home/vagrant/main.txt'
+    web.vm.provider "virtualbox" do |vb|
+      vb.name = "debian_web"
+      vb.cpus = 1
+      vb.memory = 1024
     end
   end
 
-end
-
+  #second machine
+  config.vm.define "db" do |db|
+    db.vm.box = "almalinux/9"
+    db.vm.hostname = "artyom"
+    db.vm.synced_folder "./data", "/vagrant"
+    db.vm.provision "shell",
+      inline: "dnf update -y && dnf install mariadb -y"
+    db.vm.provider "virtualbox" do |vb|
+      vb.name = "database"
+      vb.cpus = 2
+      vb.memory = 2048
+    end
   end
-
 end
-
