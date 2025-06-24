@@ -1,4 +1,4 @@
-ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
+#ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
 
 Vagrant.configure(2) do |config|
 
@@ -27,6 +27,19 @@ Vagrant.configure(2) do |config|
       vb.name = "database"
       vb.cpus = 2
       vb.memory = 2048
+    end
+  end
+
+  #kali machine
+  config.vm.define "kali" do |kali|
+    kali.vm.synced_folder "data/", "/vagrant"
+    #kali.vm.hostname = "kali"
+    kali.vm.box = "kalilinux/rolling"
+    kali.vm.provider "virtualbox" do |vb|
+      vb.cpus = 4
+      vb.memory = 4096
+      vb.name = "kali"
+      vb.gui = false
     end
   end
 end
